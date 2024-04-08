@@ -1,5 +1,7 @@
 package com.example.eathquakemonitor;
 
+import java.util.Objects;
+
 public class Earthquake {
 
     private String id;
@@ -40,5 +42,21 @@ public class Earthquake {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Earthquake that = (Earthquake) o;
+        return Double.compare(magnitude, that.magnitude) == 0 &&
+                time == that.time && Double.compare(latitude, that.latitude) == 0 &&
+                Double.compare(longitude, that.longitude) == 0 && id.equals(that.id) &&
+                place.equals(that.place);
+    }
+//Objects.equals(id, that.id), maneja nul sin lanzar una exepcion
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, place, magnitude, time, latitude, longitude);
     }
 }
