@@ -20,6 +20,16 @@
             tools:listitem="@layout/eq_list_item"
             />
 
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/no_earthquakes_right_now"
+            />
+
 
     </FrameLayout>
 </layout>

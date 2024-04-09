@@ -1,14 +1,18 @@
 package com.example.eathquakemonitor;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.eathquakemonitor.api.EqApiClient;
 import com.example.eathquakemonitor.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -28,17 +32,35 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+
+
         binding.eqRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<Earthquake> eqList = new ArrayList();
-        eqList.add(new Earthquake("casdnciao", "Buenos Aires", 5.0, 4234234523L, 105.23, 68.234));
-        eqList.add(new Earthquake("fwefwxwrf", "Ciudad de Mexico", 4.0, 43123345L, 105.23, 68.234));
-        eqList.add(new Earthquake("gegtgthth", "Lima", 2.3, 4234234523L, 105.23, 68.234));
-        eqList.add(new Earthquake("vthythxzx", "Madrid", 3.4, 4234234523L, 105.23, 68.234));
-        eqList.add(new Earthquake("tjdtyjyui", "Caracas", 6.2, 4234234523L, 105.23, 68.234));
 
         EqAdapter adapter = new EqAdapter();
+        adapter.setOnItemClickListener(new EqAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Earthquake earthquake) {
+                Toast.makeText(MainActivity.this, earthquake.getPlace(), Toast.LENGTH_SHORT).show();
+            }
+        });
         binding.eqRecycler.setAdapter(adapter);
-        adapter.submitList(eqList);
+
+        viewModel.getEqList().observe(this, eqList -> {
+            adapter.submitList(eqList);
+
+            if (eqList.isEmpty()) {
+                binding.emptyView.setVisibility((View.VISIBLE));
+            } else {
+                binding.emptyView.setVisibility(View.GONE);
+            }
+
+        });
+
+
+viewModel.getEarthquakes();
     }
 }
