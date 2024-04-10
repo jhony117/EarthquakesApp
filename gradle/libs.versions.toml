@@ -18,6 +18,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit = "com.squareup.retrofit2:retrofit:2.11.0"
 retrofitConverter = "com.squareup.retrofit2:converter-scalars:2.5.0"
+moshi = "com.squareup.retrofit2:converter-moshi:2.5.0"
 viewmodel = "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
 
 [plugins]

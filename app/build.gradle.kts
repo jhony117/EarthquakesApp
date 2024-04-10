@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.viewmodel)
     implementation(libs.retrofit)
+    implementation(libs.moshi)
     implementation(libs.retrofitConverter)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

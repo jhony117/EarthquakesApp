@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.eathquakemonitor.api.EarthquakeJSONresponse;
 import com.example.eathquakemonitor.api.EqApiClient;
+import com.example.eathquakemonitor.api.Feature;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,26 +30,8 @@ public class MainViewModel extends ViewModel {
         return eqList;
     }
 
-    public void getEarthquakes() {
-      EqApiClient.EqService service  = EqApiClient.getInstance().getService();
+    private MainRepository repository = new MainRepository();
 
-              //enqueue , manda la llamada de datos a una cola, nos permite hacer la peticion en "otro hilo"
-              service.getEarthquakes().enqueue(new Callback<String>() {
-                  @Override
-                  public void onResponse(Call<String> call, Response<String> response) {
-                    List<Earthquake> earthquakeList =  parseEarthquakes( response.body());
-
-                    eqList.setValue(earthquakeList);
-                  }
-
-                  @Override
-                  public void onFailure(Call<String> call, Throwable throwable) {
-
-                  }
-              });
-
-      //  this.eqList.setValue(eqList);
-    }
 
     private List<Earthquake> parseEarthquakes(String responseString) {
 
