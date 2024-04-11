@@ -1,8 +1,12 @@
-package com.example.eathquakemonitor;
+package com.example.eathquakemonitor.main;
 
+import androidx.lifecycle.LiveData;
+
+import com.example.eathquakemonitor.Earthquake;
 import com.example.eathquakemonitor.api.EarthquakeJSONresponse;
 import com.example.eathquakemonitor.api.EqApiClient;
 import com.example.eathquakemonitor.api.Feature;
+import com.example.eathquakemonitor.database.EqDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +17,23 @@ import retrofit2.Response;
 
 public class MainRepository {
 
-    public interface DownloadEqsListener {
-        void onEqsDownloaded(List<Earthquake> earthquakeList);
+
+    private final EqDatabase database;
+
+    public interface DownloadStatusListener {
+        void downloadSuccess();
+        void downloadError(String message);
     }
 
-    public void getEarthquakes(DownloadEqsListener downloadEqsListener) {
+
+    public MainRepository(EqDatabase database) {
+        this.database = database;
+    }
+
+    public LiveData<List<Earthquake>> getEqList() {
+        return  database.eqDao().getEarthquake();
+    }
+    public void downloadAndSaveEarthquakes(DownloadStatusListener downloadStatusListener) {
         EqApiClient.EqService service  = EqApiClient.getInstance().getService();
 
         //enqueue , manda la llamada de datos a una cola, nos permite hacer la peticion en "otro hilo"
@@ -25,16 +41,18 @@ public class MainRepository {
             @Override
             public void onResponse(Call<EarthquakeJSONresponse> call, Response<EarthquakeJSONresponse> response) {
                 // List<Earthquake> earthquakeList =  parseEarthquakes( response.body());
-
-                //
-
                 List<Earthquake> earthquakeList = getEarthquakesWithMoshi(response.body());
-                downloadEqsListener.onEqsDownloaded(earthquakeList);
+
+                EqDatabase.databaseWeiteExecutor.execute(() -> {
+                    database.eqDao().insertAll(earthquakeList);
+                });
+                downloadStatusListener.downloadSuccess();
 
             }
 
             @Override
             public void onFailure(Call<EarthquakeJSONresponse> call, Throwable throwable) {
+                downloadStatusListener.downloadError("Thre was an error downloadin, check you internet conexion");
 
             }
         });

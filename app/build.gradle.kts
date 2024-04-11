@@ -41,6 +41,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.moshi)
     implementation(libs.retrofitConverter)
+    implementation(libs.room)
+    annotationProcessor(libs.roomCompiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

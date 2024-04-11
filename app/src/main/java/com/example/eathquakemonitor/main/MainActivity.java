@@ -1,4 +1,4 @@
-package com.example.eathquakemonitor;
+package com.example.eathquakemonitor.main;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +12,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.eathquakemonitor.api.EqApiClient;
+import com.example.eathquakemonitor.Earthquake;
+import com.example.eathquakemonitor.R;
+import com.example.eathquakemonitor.api.RequestStatus;
 import com.example.eathquakemonitor.databinding.ActivityMainBinding;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel viewModel = new ViewModelProvider(this,
+                new MainViewModelFactory(getApplication())).get(MainViewModel.class);
 
 
 
@@ -59,8 +60,18 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        viewModel.getStatusMutableLiveData().observe(this, statusWithDescription -> {
+            if (statusWithDescription.getStatus() == RequestStatus.LOADING){
+                    binding.loadingWheel.setVisibility(View.VISIBLE);
+            } else {
+                    binding.loadingWheel.setVisibility(View.GONE);
+            }
+            if(statusWithDescription.getStatus() ==RequestStatus.ERROR){
+                Toast.makeText(this, statusWithDescription.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
-viewModel.getEarthquakes();
+   viewModel.downloadEarthquakes();
     }
 }

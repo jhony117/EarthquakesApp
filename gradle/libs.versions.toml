@@ -20,6 +20,8 @@ retrofit = "com.squareup.retrofit2:retrofit:2.11.0"
 retrofitConverter = "com.squareup.retrofit2:converter-scalars:2.5.0"
 moshi = "com.squareup.retrofit2:converter-moshi:2.5.0"
 viewmodel = "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
+room = "androidx.room:room-runtime:2.2.6"
+roomCompiler = "androidx.room:room-compiler:2.2.6"
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
